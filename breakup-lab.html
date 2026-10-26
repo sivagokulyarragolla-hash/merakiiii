@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Breakup Invoice & Move On Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{--bg:#f6f7f9;--card:#fff;--tx:#111;--mu:#6b7280;--bd:#e5e7eb;--gr:#58cc02;--grd:#46a302;--rd:#ff4b4b;--gt:#e9f9d8;--rt:#fff0f0;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1115;--card:#1a1d24;--tx:#f3f4f6;--mu:#9ca3af;--bd:#2b2f3a;--gt:#17300a;--rt:#331416;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1115;--card:#1a1d24;--tx:#f3f4f6;--mu:#9ca3af;--bd:#2b2f3a;--gt:#17300a;--rt:#331416;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+body{margin:0;font-family:Poppins,system-ui,sans-serif;background:var(--bg);color:var(--tx);line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 60px}
+header{text-align:center;padding:24px 0 8px}
+header h1{font-size:clamp(1.7rem,6vw,2.4rem);font-weight:800;margin:0;line-height:1.15}
+header p{color:var(--mu);margin:8px 0 14px}
+.nav a{display:inline-block;margin:3px;padding:7px 14px;border-radius:99px;border:1px solid var(--bd);background:var(--card);color:var(--tx);text-decoration:none;font-weight:600;font-size:.85rem}
+section{margin-top:34px}
+h2{font-size:1.5rem;font-weight:800;margin:0 0 4px}
+.sub{color:var(--mu);margin:0 0 16px}
+.panel{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px}
+label.f{display:block;font-weight:600;font-size:.85rem;margin:12px 0 5px}
+input[type=text],select,textarea{width:100%;font:inherit;padding:11px 12px;border-radius:12px;border:1.5px solid var(--bd);background:var(--bg);color:var(--tx)}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gr);border-color:transparent}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.grid2{grid-template-columns:1fr}}
+input[type=range]{width:100%;accent-color:#111}
+.cry{display:flex;justify-content:space-between;font-weight:600;font-size:.9rem}
+.btn{font:inherit;font-weight:700;border:0;border-radius:12px;padding:12px 18px;cursor:pointer;background:#111;color:#fff;text-decoration:none;display:inline-block;text-align:center}
+:root[data-theme="dark"] .btn.dk,.btn.dk{background:#111;color:#fff;border:1px solid #444}
+.btn.gr{background:var(--gr);color:#fff;box-shadow:0 4px 0 var(--grd)}
+.btn.gr:active{transform:translateY(3px);box-shadow:0 1px 0 var(--grd)}
+.btn.wa{background:#25d366;color:#fff}
+.btn.rd{background:var(--rd)}
+.btn.ol{background:transparent;color:var(--tx);border:1.5px solid var(--bd)}
+.btn.sm{padding:8px 13px;font-size:.85rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.full{width:100%;margin-top:16px}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.acts .btn{flex:1;min-width:150px}
+#invWrap{display:none;margin-top:20px}
+.paper{background:#fff;color:#000;border:1.5px solid #000;border-radius:12px;padding:22px;position:relative;overflow:hidden;font-family:Poppins,sans-serif}
+.ih{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-bottom:2px solid #000;padding-bottom:12px}
+.ih h3{margin:0;font-size:1.6rem;font-weight:800;letter-spacing:1px}
+.ih small{color:#555;display:block;font-size:.78rem}
+.ih .r{text-align:right;font-size:.85rem}
+.parties{display:flex;justify-content:space-between;gap:10px;margin:14px 0;font-size:.88rem}
+.parties b{display:block;font-size:.7rem;color:#666;text-transform:uppercase;letter-spacing:1px}
+.li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid #e5e5e5;font-size:.9rem}
+.li small{display:block;color:#777;font-size:.72rem}
+.li span:last-child{font-weight:600;white-space:nowrap}
+.tot{display:flex;justify-content:space-between;font-size:1.25rem;font-weight:800;border-top:2px solid #000;margin-top:8px;padding-top:10px}
+.stamp{position:absolute;right:14px;bottom:78px;transform:rotate(-14deg);border:4px solid #d11;color:#d11;font-weight:800;font-size:1.15rem;padding:4px 12px;border-radius:8px;opacity:.88;letter-spacing:1px;background:rgba(255,255,255,.6)}
+.karma{text-align:center;margin-top:26px;font-size:.82rem;color:#444;font-style:italic}
+.meter{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding:10px 0 12px}
+.mrow{display:flex;justify-content:space-between;font-weight:700;font-size:.9rem;margin-bottom:6px}
+.track{height:18px;background:var(--bd);border-radius:99px;overflow:hidden}
+#bar{height:100%;width:0;background:linear-gradient(90deg,#89e219,var(--gr));border-radius:99px;transition:width .6s}
+#msg{font-size:.78rem;color:var(--mu);margin-top:5px}
+.card{background:var(--card);border:2px solid var(--bd);border-radius:18px;padding:16px;margin-bottom:16px;transition:.3s}
+.card.pending{border-color:var(--rd);animation:pulse 2s infinite}
+.card.done{border-color:var(--gr);background:var(--gt);animation:none}
+.card.locked{opacity:.65;animation:none;border-style:dashed;border-color:var(--bd)}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,75,75,.0)}50%{box-shadow:0 0 0 6px rgba(255,75,75,.22)}}
+.top{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.day{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--tx);color:var(--bg)}
+.badge{font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:99px;background:#e0f2fe;color:#075985}
+.row{display:flex;gap:12px;align-items:flex-start}
+.row h3{margin:0;font-size:1.08rem}
+.task{margin:2px 0 0;font-size:.92rem}
+.chk input{position:absolute;opacity:0}
+.box{display:block;width:30px;height:30px;border-radius:9px;border:2.5px solid var(--rd);background:var(--card);flex:none;cursor:pointer;position:relative}
+.chk input:checked+.box{background:var(--gr);border-color:var(--grd)}
+.chk input:checked+.box::after{content:"✓";position:absolute;inset:0;color:#fff;font-weight:800;text-align:center;line-height:25px}
+.chk input:disabled+.box{border-color:var(--mu);cursor:not-allowed}
+.chk input:focus-visible+.box{outline:3px solid #60a5fa}
+.why{font-size:.8rem;color:var(--mu);margin:12px 0 0;padding:10px;border-radius:10px;background:var(--bg)}
+.ex{margin-top:12px}
+.timer{font-size:1.5rem;font-weight:800;font-variant-numeric:tabular-nums;margin:4px 0 8px}
+.ex .acts .btn{min-width:0}
+#jw{position:relative}
+.fire{display:none;position:absolute;inset:auto 0 4px;text-align:center;font-size:2.2rem;pointer-events:none}
+.burning textarea{animation:burn 1.3s forwards}
+.burning .fire{display:block;animation:rise 1.3s}
+@keyframes burn{0%{filter:none}60%{filter:sepia(1) saturate(6) hue-rotate(-25deg);opacity:.6}100%{opacity:0;transform:scale(.96)}}
+@keyframes rise{from{transform:translateY(20px)}to{transform:translateY(-60px);opacity:.2}}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.chip{font:inherit;font-weight:600;font-size:.88rem;padding:8px 14px;border-radius:99px;border:2px solid var(--bd);background:var(--card);color:var(--tx);cursor:pointer}
+.chip.on{border-color:var(--gr);background:var(--gt)}
+.lock{font-size:.8rem;color:var(--mu);margin-top:6px}
+#toasts{position:fixed;left:0;right:0;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;flex-direction:column;align-items:center;gap:8px;z-index:50;pointer-events:none;padding:0 12px}
+.toast{background:#111;color:#fff;padding:12px 16px;border-radius:14px;font-weight:600;font-size:.9rem;max-width:420px;box-shadow:0 8px 24px rgba(0,0,0,.35);animation:in .3s;border:1px solid #333}
+@keyframes in{from{transform:translateY(20px);opacity:0}}
+.ov{display:none;position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.7);align-items:center;justify-content:center;padding:20px;overflow:auto}
+.ov.show{display:flex}
+.dlg{background:var(--card);border-radius:18px;padding:22px;max-width:380px;width:100%;text-align:center}
+.dlg img{max-width:100%;border-radius:10px;border:1px solid var(--bd)}
+.dlg h3{margin:0 0 6px;font-size:1.3rem}
+#cel{background:linear-gradient(160deg,#58cc02,#0ea5e9);flex-direction:column;text-align:center;color:#fff;overflow:hidden}
+#cel h1{font-size:clamp(2.2rem,9vw,4rem);font-weight:800;margin:0;line-height:1.1;position:relative}
+#cel p{font-size:1.15rem;font-weight:600;position:relative;max-width:420px}
+#cel .acts{position:relative;justify-content:center}
+.cf{position:absolute;top:-40px;font-size:1.8rem;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+.reset{text-align:center;margin-top:24px}
+footer{margin-top:40px;text-align:center;font-size:.78rem;color:var(--mu)}
+footer b{color:var(--tx)}
+@media(prefers-reduced-motion:reduce){.card.pending,.cf{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>💔 Breakup Invoice<br>& Move On Lab</h1>
+  <p>Pehle bill bhejo, phir science se move on karo.</p>
+  <nav class="nav"><a href="#s1">🧾 Invoice</a><a href="#s2">🧪 7-Day Lab</a></nav>
+</header>
+
+<section id="s1">
+  <h2>🧾 The Breakup Invoice</h2>
+  <p class="sub">Ex ne jo diya, uska hisaab. GST included. 😌</p>
+  <div class="panel">
+    <div class="grid2">
+      <div><label class="f" for="you">Your Name</label><input id="you" type="text" maxlength="24" placeholder="e.g. Rahul"></div>
+      <div><label class="f" for="ex">Ex Name</label><input id="ex" type="text" maxlength="24" placeholder="e.g. Priya"></div>
+      <div><label class="f" for="dur">Duration</label>
+        <select id="dur"><option value="3M">3 Months</option><option value="6M">6 Months</option><option value="1Y">1 Year</option><option value="2Y">2 Years</option><option value="3Y+">3 Years+ (trauma)</option></select></div>
+      <div><label class="f" for="reason">Breakup Reason</label>
+        <select id="reason"><option>Ghosted</option><option>Cheated</option><option>Boring</option><option>Family</option><option>It’s complicated</option></select></div>
+    </div>
+    <label class="f" for="cry">Cry Meter</label>
+    <input id="cry" type="range" min="1" max="10" value="5">
+    <div class="cry"><span>😐</span><span id="cryL">5/10 😢</span><span>😭</span></div>
+    <button class="btn full dk" id="gen">Generate Invoice 🧾</button>
+  </div>
+  <div id="invWrap">
+    <div class="paper" id="inv"></div>
+    <div class="acts">
+      <button class="btn dk" id="dl">⬇️ Download as Image</button>
+      <a class="btn wa" id="wa" target="_blank" rel="noopener">💬 Share on WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<section id="s2">
+  <h2>Ab Science Se Move On Karenge 🧪</h2>
+  <p class="sub">7 tasks backed by psychology, not gyaan</p>
+  <div class="meter">
+    <div class="mrow"><span>❤️‍🩹 Healing Meter</span><span id="pct">0%</span></div>
+    <div class="track"><div id="bar"></div></div>
+    <div id="msg"></div>
+  </div>
+  <div id="cards"></div>
+  <div class="reset"><button class="btn ol sm" id="reset">🔄 Reset Journey</button></div>
+</section>
+
+<footer>
+  <p><b>Based on real studies, but we added masala for fun.</b></p>
+  <p>Inspired by research themes from APA, Journal of Social Psychology, Harvard Health & Northwestern University. Numbers here are for entertainment, not medical advice. Agar dard bahut zyada ho, kisi trusted insaan ya counsellor se baat karo. 🤍</p>
+</footer>
+</div>
+
+<div id="toasts" aria-live="polite"></div>
+<div class="ov" id="imgM"><div class="dlg"><h3>Your invoice 🧾</h3><img id="outImg" alt="Breakup invoice"><p style="font-size:.8rem;color:var(--mu)">Tap & hold (or right-click) the image to save it.</p><div class="acts"><a class="btn dk" id="dlA" download="breakup-invoice.png">⬇️ Save</a><button class="btn ol" data-close="imgM">Close</button></div></div></div>
+<div class="ov" id="txtM"><div class="dlg"><h3>Invoice badh gaya Rs.2000! 💸</h3><p id="txtP"></p><button class="btn rd full" data-close="txtM">Samajh gaya, sorry 🙏</button></div></div>
+<div class="ov" id="cel"><h1>INVOICE CLOSED. 🎉</h1><p>Case dismissed. You are officially hotter than your ex. 😎🔥</p><div class="acts"><a class="btn wa" id="wa2" target="_blank" rel="noopener">💬 Flex on WhatsApp</a><button class="btn dk" data-close="cel">Close</button></div></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=n=>"Rs. "+Math.round(n).toLocaleString("en-IN");
+const K="breakup_lab_v1";
+let S={};
+try{S=JSON.parse(localStorage.getItem(K))||{}}catch(e){S={}}
+S.done=S.done||{};S.pen=S.pen||0;S.texted=S.texted||0;S.start=S.start||Date.now();
+function save(){try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}}
+save();
+
+/* ---------- toasts & modals ---------- */
+function toast(t){const b=$("#toasts");while(b.children.length>=3)b.firstChild.remove();const d=document.createElement("div");d.className="toast";d.textContent=t;b.appendChild(d);setTimeout(()=>d.remove(),4800)}
+document.addEventListener("click",e=>{const c=e.target.closest("[data-close]");if(c)$("#"+c.dataset.close).classList.remove("show")});
+
+/* ---------- SECTION 1: invoice ---------- */
+const crySl=$("#cry");
+const cryEm=["😐","🙂","😕","😟","😢","😢","😭","😭","😭","😭"];
+function cryLabel(){$("#cryL").textContent=crySl.value+"/10 "+cryEm[crySl.value-1]}
+crySl.oninput=cryLabel;cryLabel();
+const DUR={"3M":1,"6M":2,"1Y":4,"2Y":7,"3Y+":12};
+const RSN={"Ghosted":1.2,"Cheated":2,"Boring":.8,"Family":1.1,"It’s complicated":1.5};
+function renderInv(){
+  const v=S.inv;if(!v)return;
+  const d=DUR[v.dur],r=RSN[v.reason],c=+v.cry;
+  const items=[
+    ["Emotional Damage","Rs. 5,000 × duration × “"+v.reason+"” factor",5000*d*r],
+    ["Late Night Calls","Cry level "+c+"/10, 3 AM edition",250*c*d],
+    ["Gifts & Recharge","Mandatory love investments",1200*d],
+    ["Playlist Making Charges","Sad songs, premium quality",700+200*c],
+    ["Lying “I’m fine” Tax","Said “I’m fine” while not fine",499*c]
+  ].map(i=>[i[0],i[1],Math.round(i[2])]);
+  const sub=items.reduce((a,i)=>a+i[2],0),gst=Math.round(sub*.18),total=sub+gst;
+  v.total=total;
+  $("#inv").innerHTML=
+   '<div class="ih"><div><h3>INVOICE</h3><small>Breakup Invoice & Move On Lab</small></div><div class="r"><b>'+v.no+'</b><small>'+v.date+'</small><small>Duration: '+esc(v.dur)+'</small></div></div>'+
+   '<div class="parties"><div><b>Billed to</b>'+esc(v.ex)+'</div><div style="text-align:right"><b>From</b>'+esc(v.you)+'</div></div>'+
+   items.map(i=>'<div class="li"><span>'+i[0]+'<small>'+i[1]+'</small></span><span>'+fmt(i[2])+'</span></div>').join("")+
+   '<div class="li"><span>Subtotal</span><span>'+fmt(sub)+'</span></div>'+
+   '<div class="li"><span>GST = Girlfriend Sadness Tax (18%)<small>Non-refundable, like your time</small></span><span>'+fmt(gst)+'</span></div>'+
+   '<div class="tot"><span>TOTAL DUE</span><span>'+fmt(total)+'</span></div>'+
+   '<div class="stamp">PAID IN TRAUMA</div>'+
+   '<div class="karma">Karma will collect.</div>';
+  $("#invWrap").style.display="block";
+  const txt=encodeURIComponent("Tera bill pending hai 😌\n"+v.no+" · Total due: "+fmt(total)+"\nBilled to: "+v.ex);
+  $("#wa").href="https://wa.me/?text="+txt;
+}
+$("#gen").onclick=()=>{
+  S.inv={you:$("#you").value.trim()||"Me",ex:$("#ex").value.trim()||"Ex",dur:$("#dur").value,reason:$("#reason").value,cry:crySl.value,
+    no:"#BREAKUP-"+Math.floor(100000+Math.random()*900000),date:new Date().toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})};
+  save();renderInv();$("#invWrap").scrollIntoView({behavior:"smooth",block:"start"});
+};
+$("#dl").onclick=()=>{
+  if(typeof html2canvas==="undefined"){toast("Image tool load nahi hua. Screenshot le lo! 📸");return}
+  html2canvas($("#inv"),{scale:2,backgroundColor:"#ffffff"}).then(cv=>{
+    const u=cv.toDataURL("image/png");$("#outImg").src=u;$("#dlA").href=u;$("#imgM").classList.add("show");
+  }).catch(()=>toast("Kuch gadbad hui, dobara try kar 😅"));
+};
+if(S.inv){$("#you").value=S.inv.you;$("#ex").value=S.inv.ex;$("#dur").value=S.inv.dur;$("#reason").value=S.inv.reason;crySl.value=S.inv.cry;cryLabel();renderInv()}
+
+/* ---------- SECTION 2: lab ---------- */
+const T=[
+ {id:1,day:"Day 1",e:"📵",t:"Digital Detox",b:"Impulse Control",k:"Delete/Archive chats, Mute, Unfollow.",w:"APA Study 2022: Checking ex’s socials increases anxiety by 40% & delays healing"},
+ {id:2,day:"Day 1-7",e:"⏳",t:"No Contact Streak",b:"Boundary Setting",k:"Start the 7-day timer. Don’t text/call.",w:"Zeigarnik Effect: Unfinished conversations keep brain stuck. No contact closes loop.",
+  x:'<div class="ex"><div class="timer" id="ncT">Not started</div><div class="acts"><button class="btn gr sm" id="ncS">▶ Start 7-day timer</button><button class="btn rd sm" id="ncX">😬 I texted</button></div></div>'},
+ {id:3,day:"Day 2",e:"📝",t:"Guided Grief: 30 Min Rule",b:"Emotional Regulation (CBT)",k:"Set a 30 min timer to cry/journal. Then stop.",w:"Journaling reduces heartbreak distress by 35% - Journal of Social Psychology",
+  x:'<div class="ex"><div class="timer" id="gT">30:00</div><div class="acts"><button class="btn gr sm" id="gS">▶ Start 30 min</button></div><div id="jw" style="margin-top:10px"><textarea id="jr" rows="4" placeholder="Jo bolna tha par bola nahi..."></textarea><div class="fire">🔥🔥🔥🔥</div></div><button class="btn rd sm" id="burn" style="margin-top:8px">🔥 Burn it</button></div>'},
+ {id:4,day:"Day 3",e:"🏃",t:"Body Reset",b:"Somatic Healing",k:"20 min walk / gym / dance.",w:"30 min exercise boosts endorphins = natural breakup medicine - Harvard Health",
+  x:'<div class="ex"><button class="btn gr sm" id="did">💪 I did it</button></div>'},
+ {id:5,day:"Day 4",e:"🫂",t:"Social Rewire",b:"Social Support",k:"Meet 1 friend. No ex-talk for 1 hour.",w:"Talking to friends > ruminating alone. Loneliness makes breakup pain worse 2x"},
+ {id:6,day:"Day 5-6",e:"🎸",t:"Identity Rebuild",b:"Self-Concept Reconstruction",k:"Pick 1 old hobby you left behind.",w:"Breakup = identity loss. New skill rebuilds self-esteem - Northwestern University",
+  x:'<div class="ex"><div class="chips" id="chips">'+["🎸 Guitar","💻 Coding","🏋️ Gym","🎨 Drawing","📚 Reading"].map(h=>'<button class="chip" data-h="'+h+'">'+h+'</button>').join("")+'</div><input id="plan" type="text" maxlength="80" placeholder="What you will do today for YOU"></div>'},
+ {id:7,day:"Day 7",e:"🕊️",t:"Forgive & Release",b:"Self-Compassion",k:"Final affirmation: “I forgive. Not for them, for me. I’m moving on.”",w:"Forgiveness practice (not for ex, for you) lowers cortisol by 25%",
+  x:'<div class="lock" id="lk">🔒 Unlocks only after tasks 1-6 are done</div>'}
+];
+$("#cards").innerHTML=T.map(c=>
+ '<article class="card pending" id="c'+c.id+'"><div class="top"><span class="day">'+c.day+'</span><span class="badge">🧠 '+c.b+'</span></div>'+
+ '<div class="row"><label class="chk"><input type="checkbox" data-id="'+c.id+'" aria-label="Mark '+c.t+' done"><span class="box"></span></label><div><h3>'+c.e+' '+c.t+'</h3><p class="task">'+c.k+'</p></div></div>'+(c.x||"")+
+ '<p class="why"><b>Why it works:</b> '+c.w+'</p></article>').join("");
+
+const nDone=()=>T.filter(c=>S.done[c.id]).length;
+const unlocked=()=>[1,2,3,4,5,6].every(i=>S.done[i]);
+function prog(){return Math.max(0,Math.min(100,Math.round(nDone()*14.28+(S.done[4]?5.72:0)-S.pen)))}
+const MSGS=["Ex khush, tu dukhi? Not fair! Chal shuru kar.","Pehla step le liya. Achha start! 🌱","Healing mode ON. 🔥","Aadha rasta paar. Ex ko jalne de!","Almost there. Glow-up loading...","Last step baaki hai. Tu legend hai!"];
+function update(){
+  const p=prog();$("#bar").style.width=p+"%";$("#pct").textContent=p+"%";
+  $("#msg").textContent=(p>=100?"Fully healed. Invoice closed! 🎉":MSGS[Math.min(5,nDone())])+(S.texted?"  ·  Extra invoice: "+fmt(S.texted*2000):"");
+  T.forEach(c=>{
+    const el=$("#c"+c.id),cb=el.querySelector("input[type=checkbox]"),d=!!S.done[c.id],lk=c.id===7&&!unlocked()&&!d;
+    el.className="card "+(d?"done":lk?"locked":"pending");cb.checked=d;cb.disabled=lk;
+  });
+  $("#lk").textContent=unlocked()||S.done[7]?"✅ Unlocked. Final step!":"🔒 Unlocks only after tasks 1-6 are done";
+  $("#ncS").style.display=S.nc?"none":"";$("#ncX").style.display=S.nc?"":"none";
+  $("#gS").textContent=S.gEnd?"⏹ Stop":"▶ Start 30 min";
+  document.querySelectorAll(".chip").forEach(b=>b.classList.toggle("on",b.dataset.h===S.hobby));
+}
+function setDone(id,v){
+  if(v){
+    if(id===2&&!S.nc){toast("Pehle 7-day timer start kar ⏳");return false}
+    if(id===6&&(!S.hobby||!($("#plan").value.trim()))){toast("Hobby chun aur likh aaj kya karega 🎯");return false}
+    if(id===7&&!unlocked()){toast("Pehle 1-6 poore kar 🔒");return false}
+  }
+  S.done[id]=v;save();update();
+  if(v){
+    if(id===4)toast("Hotness loading... 🔥 +20% healing");
+    else if(id!==7)toast("Task done! Ex ko pata bhi nahi chalega 😎");
+    if(id===7)celebrate();
+  }
+  return true;
+}
+document.querySelectorAll(".chk input").forEach(cb=>cb.onchange=()=>{if(!setDone(+cb.dataset.id,cb.checked))cb.checked=false});
+
+/* no-contact */
+$("#ncS").onclick=()=>{S.nc=Date.now();save();update();toast("Streak shuru! Phone se door reh 📵")};
+$("#ncX").onclick=()=>{
+  S.texted++;S.pen+=10;S.nc=Date.now();save();update();
+  $("#txtP").textContent="Streak reset + 10% progress gaya. Total extra invoice: "+fmt(S.texted*2000)+" 😭";
+  $("#txtM").classList.add("show");
+};
+/* grief */
+const ta=$("#jr");ta.value=S.journal||"";ta.oninput=()=>{S.journal=ta.value;save()};
+$("#gS").onclick=()=>{S.gEnd=S.gEnd?0:Date.now()+30*60000;save();update();tick();if(S.gEnd)toast("30 min ka time shuru. Rona hai toh ro le 😭")};
+$("#burn").onclick=()=>{
+  if(!ta.value.trim()){toast("Pehle kuch likh toh sahi 😅");return}
+  const w=$("#jw");w.classList.add("burning");
+  setTimeout(()=>{ta.value="";S.journal="";save();w.classList.remove("burning");toast("Jal gaya sab. Halka feel ho raha hai 🔥")},1300);
+};
+/* body */
+$("#did").onclick=()=>setDone(4,true);
+/* identity */
+document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{S.hobby=b.dataset.h;save();update()});
+const plan=$("#plan");plan.value=S.plan||"";plan.oninput=()=>{S.plan=plan.value;save()};
+
+/* timers */
+const p2=n=>String(n).padStart(2,"0");
+function tick(){
+  if(S.nc){
+    const e=Date.now()-S.nc;
+    $("#ncT").textContent=e>=7*864e5?"🏆 7 days clean!":"Day "+(Math.floor(e/864e5)+1)+"/7 · "+Math.floor(e/864e5)+"d "+p2(Math.floor(e/36e5)%24)+":"+p2(Math.floor(e/6e4)%60)+":"+p2(Math.floor(e/1e3)%60);
+  }else $("#ncT").textContent="Not started";
+  if(S.gEnd){
+    const l=S.gEnd-Date.now();
+    if(l<=0){S.gEnd=0;save();update();$("#gT").textContent="30:00";toast("Time’s up. Ab bas! Pani pi, aage badh 💧")}
+    else $("#gT").textContent=p2(Math.floor(l/6e4))+":"+p2(Math.floor(l/1e3)%60);
+  }else $("#gT").textContent="30:00";
+}
+setInterval(tick,1000);
+
+/* warnings */
+const shown={};
+function warn(){
+  const h=(Date.now()-S.start)/36e5;
+  if(!S.done[1]&&h>=24&&!shown[1]){shown[1]=1;toast("Stalking = Self-harm with extra steps. Band kar! 🚫")}
+  if(!S.done[5]&&h>=48&&!shown[5]){shown[5]=1;toast("Room me Arijit Singh? Bahar nikal, dost bula rahe hai! 🎤")}
+}
+const NAG=["Ex khush, tu dukhi? Not fair! 😤","Pending tasks dekh ke ex hass raha hai 😏","Healing meter ro raha hai. Ek task kar de! 🥺","Scroll mat kar, task kar. 📱➡️✅"];
+setInterval(()=>{if(prog()<100&&!S.done[7])toast(NAG[Math.floor(Math.random()*NAG.length)])},90000);
+setInterval(warn,60000);warn();
+
+/* celebration */
+function celebrate(){
+  const o=$("#cel");o.querySelectorAll(".cf").forEach(n=>n.remove());
+  const em=["🎉","✨","🔥","💚","😎","🎊"];
+  for(let i=0;i<40;i++){const s=document.createElement("span");s.className="cf";s.textContent=em[i%em.length];s.style.left=Math.random()*100+"%";s.style.animationDuration=(2.5+Math.random()*3)+"s";s.style.animationDelay=Math.random()*2+"s";o.appendChild(s)}
+  $("#wa2").href="https://wa.me/?text="+encodeURIComponent("Invoice closed. Case dismissed. Ex who? 😎🔥");
+  o.classList.add("show");
+}
+
+/* reset */
+let rt;
+$("#reset").onclick=function(){
+  if(!this.dataset.sure){this.dataset.sure=1;this.textContent="Pakka? Tap again ⚠️";rt=setTimeout(()=>{delete this.dataset.sure;this.textContent="🔄 Reset Journey"},3500);return}
+  clearTimeout(rt);delete this.dataset.sure;this.textContent="🔄 Reset Journey";
+  const inv=S.inv;S={done:{},pen:0,texted:0,start:Date.now(),inv:inv};save();
+  ta.value="";plan.value="";update();tick();toast("Journey reset. Naya chapter, naya tu 🌅");
+};
+update();tick();
+</script>
+</body>
+</html>
